@@ -84,8 +84,8 @@ describe('DriveSmart E2E Authentication Suite', function () {
   it('Should allow switching to sign up form', async function () {
     await driver.get('http://localhost:5173/login?role=learner');
 
-    // Wait for the sign-up toggler button
-    const toggleBtn = await driver.wait(until.elementLocated(By.xpath("//button[contains(text(), 'Sign up') or contains(text(), 'Sign in')]")), 5000);
+    // Wait for the sign-up toggler button (uniquely matches toggle button containing 'account?')
+    const toggleBtn = await driver.wait(until.elementLocated(By.xpath("//button[contains(text(), 'account?')]")), 5000);
     await toggleBtn.click();
 
     // Confirm that confirm password input shows up
