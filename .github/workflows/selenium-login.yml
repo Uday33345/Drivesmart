@@ -37,6 +37,10 @@ jobs:
           cd selenium-tests
           npm test
 
+      - name: Install Python dependencies
+        run: |
+          pip install openpyxl
+
       - name: Generate Quality Excel Report in CI
         run: |
           python generate_report.py
