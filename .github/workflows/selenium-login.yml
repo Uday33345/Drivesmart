@@ -21,18 +21,18 @@ jobs:
           cache: 'npm'
 
       - name: Install Frontend Dependencies
-        run: npm ci
-
-      - name: Start Vite Dev Server
-        run: npm run dev &
+        run: npm install
 
       - name: Install Selenium Test Dependencies
         working-directory: ./selenium-tests
         run: npm install
 
-      - name: Wait for Dev Server to respond
-        run: npx wait-on http://localhost:5173 --timeout 45000
-
-      - name: Run Selenium E2E Tests
-        working-directory: ./selenium-tests
-        run: npm test
+      - name: Start App and Run E2E Tests
+        run: |
+          # Start the dev server in the background of the same shell session
+          npm run dev &
+          # Wait for the server to be active (timeout 60s)
+          npx wait-on http://localhost:5173 --timeout 60000
+          # Navigate and execute Mocha test suite
+          cd selenium-tests
+          npm test
