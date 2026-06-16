@@ -36,3 +36,13 @@ jobs:
           # Navigate and execute Mocha test suite
           cd selenium-tests
           npm test
+
+      - name: Generate Quality Excel Report in CI
+        run: |
+          python generate_report.py
+
+      - name: Upload Excel Test Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: E2E-Test-Report-DriveSmart
+          path: E2E_Test_Report_DriveSmart_*.xlsx
