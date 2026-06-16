@@ -1,0 +1,20 @@
+Available drives: ['C:\\', 'U:\\']
+Scanning drive: C:\ ...
+Found match: C:\Users\Uday\Downloads\mcp-learning-path-demo-main\venv\Lib\site-packages\pandas\tests\io\excel\test_xlsxwriter.py
+Found match: C:\Users\Uday\Downloads\mcp-learning-path-demo-main\venv\Lib\site-packages\pandas\tests\io\excel\__pycache__\test_xlsxwriter.cpython-313.pyc
+Found match: C:\Users\Uday\OneDrive\Desktop\eduexpose_project\venv\Lib\site-packages\pandas\tests\io\excel\test_xlsxwriter.py
+Found match: C:\Users\Uday\OneDrive\Desktop\eduexpose_project\venv\Lib\site-packages\pandas\tests\io\excel\__pycache__\test_xlsxwriter.cpython-313.pyc
+Found match: C:\Users\Uday\OneDrive\Desktop\emotion_music\.venv\Lib\site-packages\pandas\tests\io\excel\test_xlsxwriter.py
+Found match: C:\Users\Uday\OneDrive\Desktop\emotion_music\.venv\Lib\site-packages\pandas\tests\io\excel\__pycache__\test_xlsxwriter.cpython-313.pyc
+Found match: C:\Users\Uday\OneDrive\Desktop\internship2\venv\Lib\site-packages\pandas\tests\io\excel\test_xlsxwriter.py
+Found match: C:\Users\Uday\OneDrive\Desktop\internship2\venv\Lib\site-packages\pandas\tests\io\excel\__pycache__\test_xlsxwriter.cpython-313.pyc
+Scanning drive: U:\ ...
+Search completed. Found 8 files total.
+ - C:\Users\Uday\Downloads\mcp-learning-path-demo-main\venv\Lib\site-packages\pandas\tests\io\excel\test_xlsxwriter.py
+ - C:\Users\Uday\Downloads\mcp-learning-path-demo-main\venv\Lib\site-packages\pandas\tests\io\excel\__pycache__\test_xlsxwriter.cpython-313.pyc
+ - C:\Users\Uday\OneDrive\Desktop\eduexpose_project\venv\Lib\site-packages\pandas\tests\io\excel\test_xlsxwriter.py
+ - C:\Users\Uday\OneDrive\Desktop\eduexpose_project\venv\Lib\site-packages\pandas\tests\io\excel\__pycache__\test_xlsxwriter.cpython-313.pyc
+ - C:\Users\Uday\OneDrive\Desktop\emotion_music\.venv\Lib\site-packages\pandas\tests\io\excel\test_xlsxwriter.py
+ - C:\Users\Uday\OneDrive\Desktop\emotion_music\.venv\Lib\site-packages\pandas\tests\io\excel\__pycache__\test_xlsxwriter.cpython-313.pyc
+ - C:\Users\Uday\OneDrive\Desktop\internship2\venv\Lib\site-packages\pandas\tests\io\excel\test_xlsxwriter.py
+ - C:\Users\Uday\OneDrive\Desktop\internship2\venv\Lib\site-packages\pandas\tests\io\excel\__pycache__\test_xlsxwriter.cpython-313.pyc

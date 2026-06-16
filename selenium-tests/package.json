@@ -1,0 +1,14 @@
+{
+  "name": "drivesmart-selenium-tests",
+  "version": "1.0.0",
+  "description": "Selenium E2E automation tests for DriveSmart",
+  "main": "tests/login.test.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "mocha tests/**/*.test.js --timeout 30000"
+  },
+  "devDependencies": {
+    "mocha": "^10.4.0",
+    "selenium-webdriver": "^4.22.0"
+  }
+}

@@ -1,0 +1,38 @@
+name: DriveSmart E2E Selenium CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      - name: Start Vite Dev Server
+        run: npm run dev &
+
+      - name: Install Selenium Test Dependencies
+        working-directory: ./selenium-tests
+        run: npm install
+
+      - name: Wait for Dev Server to respond
+        run: npx wait-on http://localhost:5173 --timeout 45000
+
+      - name: Run Selenium E2E Tests
+        working-directory: ./selenium-tests
+        run: npm test
