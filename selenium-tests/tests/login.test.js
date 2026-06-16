@@ -30,11 +30,11 @@ describe('DriveSmart E2E Authentication Suite', function () {
     await driver.get('http://localhost:5173/role-select');
 
     // Wait for the role select title
-    await driver.wait(until.elementLocated(By.xpath("//h2[contains(text(), 'Choose your role')]")), 10000);
+    await driver.wait(until.elementLocated(By.xpath("//h1[contains(text(), 'Choose Your Path')]")), 10000);
 
     // Verify current title or elements
     const bodyText = await driver.findElement(By.tagName('body')).getText();
-    assert.ok(bodyText.includes('Choose your role'), 'Page should contain role select instructions');
+    assert.ok(bodyText.includes('Choose Your Path'), 'Page should contain role select instructions');
 
     // Find the Learner card and click it
     const learnerCard = await driver.findElement(By.xpath("//h3[contains(text(), 'Learner')]/ancestor::button"));
@@ -89,7 +89,7 @@ describe('DriveSmart E2E Authentication Suite', function () {
     await toggleBtn.click();
 
     // Confirm that confirm password input shows up
-    const confirmPasswordInput = await driver.wait(until.elementLocated(By.xpath("//label[contains(text(), 'Confirm Password')]/following-sibling::div/input")), 5000);
+    const confirmPasswordInput = await driver.wait(until.elementLocated(By.xpath("//label[contains(text(), 'Confirm Password')]/..//input")), 5000);
     assert.ok(confirmPasswordInput, 'Confirm password input should render after toggling to Sign Up mode');
   });
 });
