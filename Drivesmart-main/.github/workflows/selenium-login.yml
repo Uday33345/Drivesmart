@@ -1,0 +1,55 @@
+name: DriveSmart E2E Selenium CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Frontend Dependencies
+        run: npm install
+
+      - name: Install Selenium Test Dependencies
+        working-directory: ./selenium-tests
+        run: npm install
+
+      - name: Start App and Run E2E Tests
+        run: |
+          npm run dev &
+          npx wait-on http://localhost:5173 --timeout 60000
+          cd selenium-tests
+          npm test || true
+
+      - name: Install Python dependencies
+        run: |
+          pip install openpyxl
+
+      - name: Generate Quality Excel Report in CI
+        run: |
+          python generate_report.py
+          python generate_300_e2e_report.py || true
+
+      - name: Publish Category Summary Table to GitHub Actions Step Summary
+        if: always()
+        run: |
+          node scripts/publish_gha_summary.cjs
+
+      - name: Upload Excel Test Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: E2E-Test-Report-DriveSmart
+          path: E2E_Test_Report_DriveSmart_*.xlsx

@@ -1,0 +1,20 @@
+Available drives: ['C:\\', 'U:\\']
+Scanning drive: C:\ ...
+Found xlsx: C:\Users\Uday\travel_times.arff.xlsx
+Found xlsx: C:\Users\Uday\Downloads\Untitled form (Responses).xlsx
+Found xlsx: C:\Users\Uday\OneDrive\Desktop\auto.xlsx
+Found xlsx: C:\Users\Uday\OneDrive\Desktop\AI LAb\travel_times.arff.xlsx
+Found xlsx: C:\Users\Uday\OneDrive\Desktop\excels\csv.xlsx
+Found xlsx: C:\Users\Uday\OneDrive\Desktop\excels\Data analytics hands on project data.xlsx
+Found xlsx: C:\Users\Uday\OneDrive\Desktop\excels\travel_times.arff.xlsx
+Found xlsx: C:\Users\Uday\OneDrive\Desktop\project 2025\accuracies.xlsx
+Scanning drive: U:\ ...
+Search completed. Found 8 files total.
+ - C:\Users\Uday\travel_times.arff.xlsx
+ - C:\Users\Uday\Downloads\Untitled form (Responses).xlsx
+ - C:\Users\Uday\OneDrive\Desktop\auto.xlsx
+ - C:\Users\Uday\OneDrive\Desktop\AI LAb\travel_times.arff.xlsx
+ - C:\Users\Uday\OneDrive\Desktop\excels\csv.xlsx
+ - C:\Users\Uday\OneDrive\Desktop\excels\Data analytics hands on project data.xlsx
+ - C:\Users\Uday\OneDrive\Desktop\excels\travel_times.arff.xlsx
+ - C:\Users\Uday\OneDrive\Desktop\project 2025\accuracies.xlsx

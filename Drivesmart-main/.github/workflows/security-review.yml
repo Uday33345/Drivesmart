@@ -1,0 +1,44 @@
+name: DriveSmart Security Review & SAST Policy Gate
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - '.github/workflows/security-review.yml'
+  workflow_dispatch:
+
+jobs:
+  security-gate:
+    name: Web & Backend SAST Scan & Zero-Critical Policy Gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Web Security Review Suite
+        run: node scripts/generateWebSecuritySuite.js
+
+      - name: Run Backend Security Review Suite
+        run: node scripts/generateBackendSecuritySuite.js
+
+      - name: Enforce Zero-Critical Security Policy Gate
+        run: |
+          CRITICAL_COUNT=$(grep -i "Critical Findings" security-review.md | grep -o '[0-9]\+' || echo 0)
+          echo "Critical Security Vulnerabilities Count: ${CRITICAL_COUNT}"
+          if [ "$CRITICAL_COUNT" -gt 0 ]; then
+            echo "❌ Zero-Critical Security Policy VIOLATED! Aborting pipeline."
+            exit 1
+          fi
+          echo "✅ Zero-Critical Security Policy PASSED."
+
+      - name: Publish Security Step Summary
+        if: always()
+        run: |
+          cat security-review.md >> $GITHUB_STEP_SUMMARY

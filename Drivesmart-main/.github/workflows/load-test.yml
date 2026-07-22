@@ -1,0 +1,45 @@
+name: DriveSmart API Load Testing (k6)
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - '.github/workflows/load-test.yml'
+  workflow_dispatch:
+
+jobs:
+  load-test:
+    name: Run k6 Baseline Load Test (100 VUs - 1 Min)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Start Vite Preview Server
+        run: |
+          npm ci
+          npm run build
+          npx vite preview --port 5173 --host 127.0.0.1 &
+          sleep 4
+          curl -I http://127.0.0.1:5173 || exit 1
+
+      - name: Execute k6 Load Test
+        env:
+          BACKEND_URL: 'http://127.0.0.1:5173'
+        run: |
+          k6 run --summary-export=summary.json scripts/load-test.js
+
+      - name: Parse k6 Load Test Summary
+        if: always()
+        run: |
+          node scripts/parseK6Summary.js

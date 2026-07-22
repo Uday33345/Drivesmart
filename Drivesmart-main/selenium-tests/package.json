@@ -1,0 +1,21 @@
+{
+  "name": "drivesmart-selenium-tests",
+  "version": "1.0.0",
+  "description": "Selenium WebDriver & Mobile APK Page Object Model E2E Test Automation Framework for DriveSmart",
+  "main": "tests/auth.test.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "mocha tests/**/*.test.js --timeout 40000 --exit",
+    "test:auth": "mocha tests/auth.test.js --timeout 30000",
+    "test:learner": "mocha tests/learner_journey.test.js --timeout 30000",
+    "test:booking": "mocha tests/booking_wizard.test.js --timeout 30000",
+    "test:wallet": "mocha tests/learner_wallet.test.js --timeout 30000",
+    "test:instructor": "mocha tests/instructor_journey.test.js --timeout 30000",
+    "test:admin": "mocha tests/admin_journey.test.js --timeout 30000",
+    "test:mobile": "mocha tests/mobile_apk_native.test.js --timeout 30000"
+  },
+  "devDependencies": {
+    "mocha": "^10.4.0",
+    "selenium-webdriver": "^4.22.0"
+  }
+}

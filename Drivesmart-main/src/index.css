@@ -1,0 +1,173 @@
+/* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+@layer base {
+  body {
+    @apply bg-navy-500 text-white font-body antialiased min-h-screen overflow-x-hidden;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+}
+@layer utilities {
+  .glass {
+    @apply bg-glass-light backdrop-blur-md border border-white/10;
+  }
+  .glass-strong {
+    @apply bg-glass-medium backdrop-blur-lg border border-white/20;
+  }
+  .app-bg {
+    background: radial-gradient(circle at top right, #1a3967 0%, #0a1628 40%, #060d18 100%);
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600;
+  }
+}
+/* Custom Scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a1628;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a3967;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4d6589;
+}
+
+/* Learner Portal Light Theme CSS Overrides */
+.learner-portal-content {
+  color: #1e293b;
+}
+
+.learner-portal-content h1,
+.learner-portal-content h2,
+.learner-portal-content h3,
+.learner-portal-content h4,
+.learner-portal-content h5,
+.learner-portal-content h6 {
+  color: #0f172a !important;
+}
+
+/* Glass card conversion to clean light-mode cards */
+.learner-portal-content .glass {
+  background: #ffffff !important;
+  border-color: #f1f5f9 !important; /* border-slate-100 */
+  color: #334155 !important; /* text-slate-700 */
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+.learner-portal-content .glass-strong {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important; /* border-slate-200 */
+  color: #1e293b !important; /* text-slate-800 */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Text overrides */
+.learner-portal-content .text-white {
+  color: #0f172a !important;
+}
+
+.learner-portal-content .text-navy-100 {
+  color: #334155 !important;
+}
+
+.learner-portal-content .text-navy-200 {
+  color: #475569 !important;
+}
+
+.learner-portal-content .text-navy-300 {
+  color: #64748b !important;
+}
+
+.learner-portal-content .text-navy-400 {
+  color: #94a3b8 !important;
+}
+
+/* Background overrides */
+.learner-portal-content .bg-navy-900 {
+  background-color: #f8fafc !important; /* bg-slate-50 */
+}
+
+.learner-portal-content .bg-navy-900\/50 {
+  background-color: #f1f5f9 !important; /* bg-slate-100 */
+}
+
+.learner-portal-content .bg-navy-800 {
+  background-color: #e2e8f0 !important; /* bg-slate-200 */
+}
+
+.learner-portal-content .bg-navy-900\/80 {
+  background-color: #f1f5f9 !important;
+}
+
+/* Form inputs & interactive controls */
+.learner-portal-content input, 
+.learner-portal-content select, 
+.learner-portal-content textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important; /* border-slate-200 */
+}
+
+.learner-portal-content input:focus, 
+.learner-portal-content select:focus, 
+.learner-portal-content textarea:focus {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 0 0 2px rgba(203, 213, 225, 0.2) !important;
+}
+
+.learner-portal-content input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Modal Dialog Overrides */
+.learner-portal-content .fixed.inset-0.bg-black\/60 {
+  background-color: rgba(15, 23, 42, 0.4) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+.learner-portal-content .fixed .glass-strong {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Scrollbar overrides for light theme inside learner portal */
+.learner-portal-content ::-webkit-scrollbar-track {
+  background: #f1f5f9 !important;
+}
+
+.learner-portal-content ::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+}
+
+.learner-portal-content ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8 !important;
+}
+
+/* Border overrides */
+.learner-portal-content .border-white\/5,
+.learner-portal-content .border-white\/10,
+.learner-portal-content .border-white\/20 {
+  border-color: #f1f5f9 !important; /* border-slate-100 */
+}
+
+.learner-portal-content .border-primary-500\/20,
+.learner-portal-content .border-primary-500\/30 {
+  border-color: rgba(249, 115, 22, 0.15) !important;
+}
+

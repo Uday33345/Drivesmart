@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DriveSmart - Backend Load Testing Dashboard</title>
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.4);
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --error: #ef4444;
+      --error-glow: rgba(239, 68, 68, 0.3);
+      --warning: #f59e0b;
+      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+    }
+
+    header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      background: rgba(11, 15, 25, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 2rem;
+      height: 2rem;
+      background: linear-gradient(135deg, var(--primary), var(--success));
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, #ffffff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      color: var(--primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      backdrop-filter: blur(16px);
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: border-color 0.3s ease;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-main);
+      border-left: 3px solid var(--primary);
+      padding-left: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input, select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .row-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.875rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      color: white;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--error);
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: var(--error);
+      color: white;
+      box-shadow: 0 4px 15px var(--error-glow);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .dashboard-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Live Status Banner */
+    .status-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+    }
+
+    .dot {
+      width: 0.65rem;
+      height: 0.65rem;
+      border-radius: 50%;
+      background-color: var(--text-muted);
+      display: inline-block;
+    }
+
+    .dot.running {
+      background-color: var(--primary);
+      animation: pulse 1.5s infinite;
+    }
+
+    .dot.completed {
+      background-color: var(--success);
+    }
+
+    .dot.failed {
+      background-color: var(--error);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.4; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.4; }
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--text-muted);
+    }
+
+    .metric-card.primary::before { background: var(--primary); }
+    .metric-card.success::before { background: var(--success); }
+    .metric-card.error::before { background: var(--error); }
+    .metric-card.warning::before { background: var(--warning); }
+
+    .metric-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .metric-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Progress section */
+    .progress-container {
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--success));
+      transition: width 0.1s linear;
+    }
+
+    /* Chart Area */
+    .chart-card {
+      min-height: 350px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-muted);
+    }
+
+    .legend-color {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 0.2rem;
+    }
+
+    .canvas-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      min-height: 250px;
+    }
+
+    canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Log Area */
+    .log-card {
+      max-height: 220px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .log-container {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.8rem;
+      overflow-y: auto;
+      max-height: 150px;
+      color: #a7f3d0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .log-line {
+      line-height: 1.4;
+    }
+
+    .log-line.error { color: #fecaca; }
+    .log-line.info { color: #93c5fd; }
+    .log-line.warn { color: #fde047; }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--card-border);
+      margin-top: auto;
+      background: rgba(11, 15, 25, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">DS</div>
+      <div class="logo-text">DriveSmart Baseline Load Tester</div>
+    </div>
+    <span class="badge">API Benchmarking Utility</span>
+  </header>
+
+  <main>
+    <!-- Left column: config & controller -->
+    <div class="sidebar">
+      <div class="glass-card">
+        <h2>Configuration</h2>
+        <form id="config-form">
+          <div class="form-group">
+            <label for="supabase-url">Supabase URL</label>
+            <input type="url" id="supabase-url" value="https://nxidmpvkfnrgsustduqv.supabase.co" required>
+          </div>
+
+          <div class="form-group">
+            <label for="anon-key">Anon/Public Key</label>
+            <input type="text" id="anon-key" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54aWRtcHZrZm5yZ3N1c3RkdXF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjkxMzgsImV4cCI6MjA5MjgwNTEzOH0.AaakL3QghjvvHJuGmmv9lYrlRug65zqaxfTr62p2F-o" required>
+          </div>
+
+          <div class="form-group">
+            <label for="target-path">Target API Table Endpoint</label>
+            <select id="target-path">
+              <option value="/rest/v1/instructors">/rest/v1/instructors (Read Instructors)</option>
+              <option value="/rest/v1/learners">/rest/v1/learners (Read Learners)</option>
+              <option value="/rest/v1/bookings">/rest/v1/bookings (Read Bookings)</option>
+            </select>
+          </div>
+
+          <div class="row-grid">
+            <div class="form-group">
+              <label for="virtual-users">Virtual Users</label>
+              <input type="number" id="virtual-users" value="100" min="1" max="250" required>
+            </div>
+            <div class="form-group">
+              <label for="duration">Duration (Seconds)</label>
+              <input type="number" id="duration" value="60" min="5" max="300" required>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+            <button type="submit" id="btn-start" class="btn btn-primary">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 0.25rem;">
+                <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+              </svg>
+              Start Load Test
+            </button>
+            <button type="button" id="btn-abort" class="btn btn-danger" disabled>
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 0.25rem;">
+                <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
+              </svg>
+              Abort Test
+            </button>
+          </div>
+          <div id="report-actions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem;">
+            <button type="button" id="btn-copy" class="btn" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-main); font-size: 0.8rem; padding: 0.6rem 0.25rem;" disabled>
+              Copy Report
+            </button>
+            <button type="button" id="btn-export" class="btn" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-main); font-size: 0.8rem; padding: 0.6rem 0.25rem;" disabled>
+              Download JSON
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Quick instructions -->
+      <div class="glass-card" style="padding: 1.25rem;">
+        <h2 style="margin-bottom: 0.75rem; font-size: 1rem;">Testing Parameters</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.75rem;">
+          To perform a baseline load test matching user-level concurrency, simulate <strong>100 Virtual Users</strong> running continuously for <strong>1 minute (60s)</strong>.
+        </p>
+        <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+          This dashboard initiates parallel asynchronous fetches to Supabase using a client-side pool. This exercises actual network transport, PostgREST layers, and database query processing.
+        </p>
+      </div>
+    </div>
+
+    <!-- Right column: metrics, progress, and real-time visualization -->
+    <div class="dashboard-content">
+      <!-- Status Banner -->
+      <div class="status-banner">
+        <div class="status-indicator">
+          <span id="status-dot" class="dot"></span>
+          <span id="status-text">Ready to run test</span>
+        </div>
+        <div id="remaining-time" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted);">0s remaining</div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-container">
+        <div class="progress-bar-bg">
+          <div id="progress-bar-fill" class="progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <!-- Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card primary">
+          <div class="metric-title">Requests Sent</div>
+          <div id="metric-sent" class="metric-value">0</div>
+          <div class="metric-sub">Total HTTP calls initiated</div>
+        </div>
+        <div class="metric-card success">
+          <div class="metric-title">Success Rate</div>
+          <div id="metric-rate" class="metric-value">0%</div>
+          <div id="metric-success-ratio" class="metric-sub">0 / 0 successful</div>
+        </div>
+        <div class="metric-card warning">
+          <div class="metric-title">Avg Latency (Response Time)</div>
+          <div id="metric-latency-avg" class="metric-value">0 ms</div>
+          <div id="metric-latency-min-max" class="metric-sub">Min: 0ms | Max: 0ms</div>
+        </div>
+        <div class="metric-card primary">
+          <div class="metric-title">Requests / Sec (RPS)</div>
+          <div id="metric-rps" class="metric-value">0</div>
+          <div id="metric-rps-avg" class="metric-sub">Avg: 0 req/sec</div>
+        </div>
+      </div>
+
+      <!-- Live performance chart -->
+      <div class="glass-card chart-card">
+        <div class="chart-header">
+          <h2>Performance Over Time</h2>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--primary);"></div>
+              <span>RPS (req/sec)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--success);"></div>
+              <span>Avg Latency (ms)</span>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-container">
+          <canvas id="performance-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Real-time log -->
+      <div class="glass-card log-card">
+        <h2>Activity Log</h2>
+        <div id="log" class="log-container">
+          <div class="log-line info">Dashboard loaded. Configure parameters and click "Start Load Test".</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    DriveSmart Performance & Reliability Framework &copy; 2026. Made with &hearts; for baseline verification.
+  </footer>
+
+  <script>
+    // Config Elements
+    const form = document.getElementById('config-form');
+    const inputUrl = document.getElementById('supabase-url');
+    const inputKey = document.getElementById('anon-key');
+    const selectPath = document.getElementById('target-path');
+    const inputUsers = document.getElementById('virtual-users');
+    const inputDuration = document.getElementById('duration');
+    const btnStart = document.getElementById('btn-start');
+    const btnAbort = document.getElementById('btn-abort');
+
+    // UI Indicators
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const remainingTimeEl = document.getElementById('remaining-time');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+
+    // Metrics Elements
+    const elSent = document.getElementById('metric-sent');
+    const elRate = document.getElementById('metric-rate');
+    const elSuccessRatio = document.getElementById('metric-success-ratio');
+    const elLatencyAvg = document.getElementById('metric-latency-avg');
+    const elLatencyMinMax = document.getElementById('metric-latency-min-max');
+    const elRps = document.getElementById('metric-rps');
+    const elRpsAvg = document.getElementById('metric-rps-avg');
+    const logContainer = document.getElementById('log');
+
+    // Chart Setup
+    const canvas = document.getElementById('performance-chart');
+    const ctx = canvas.getContext('2d');
+    let chartData = []; // Array of { rps, latency, timestamp }
+
+    // Resize canvas to parent width
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      canvas.width = container.clientWidth * window.devicePixelRatio;
+      canvas.height = container.clientHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      drawChart();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 100);
+
+    // Logging helper
+    function logMessage(text, type = 'info') {
+      const line = document.createElement('div');
+      line.className = `log-line ${type}`;
+      const time = new Date().toLocaleTimeString();
+      line.textContent = `[${time}] ${text}`;
+      logContainer.appendChild(line);
+      
+      // Limit number of log entries to 100 to prevent browser slowdowns
+      while (logContainer.children.length > 100) {
+        logContainer.removeChild(logContainer.firstChild);
+      }
+      
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    // Performance Chart Drawing Function
+    function drawChart() {
+      const width = canvas.width / window.devicePixelRatio;
+      const height = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, width, height);
+
+      if (chartData.length === 0) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.font = '12px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText('No data available. Run test to view chart.', width / 2, height / 2);
+        return;
+      }
+
+      const padding = { top: 20, right: 40, bottom: 30, left: 45 };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+
+      // Find max values for scaling
+      const maxRps = Math.max(...chartData.map(d => d.rps), 50);
+      const maxLatency = Math.max(...chartData.map(d => d.latency), 200);
+
+      // Draw Grid Lines (Y-Axis)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      const divisions = 4;
+      for (let i = 0; i <= divisions; i++) {
+        const y = padding.top + (chartHeight / divisions) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(padding.left + chartWidth, y);
+        ctx.stroke();
+
+        // Left Label (RPS)
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'right';
+        const valRps = Math.round(maxRps - (maxRps / divisions) * i);
+        ctx.fillText(valRps, padding.left - 8, y + 3);
+
+        // Right Label (Latency)
+        ctx.textAlign = 'left';
+        const valLat = Math.round(maxLatency - (maxLatency / divisions) * i);
+        ctx.fillText(`${valLat}ms`, padding.left + chartWidth + 8, y + 3);
+      }
+
+      // Draw X-axis timestamps or seconds
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      const xDivision = Math.max(1, Math.floor(chartData.length / 5));
+      for (let i = 0; i < chartData.length; i += xDivision) {
+        const x = padding.left + (chartWidth / Math.max(1, chartData.length - 1)) * i;
+        ctx.fillText(`${i}s`, x, height - 10);
+      }
+
+      // Helper function to map data coordinate to screen pixel coordinate
+      function getX(index) {
+        if (chartData.length <= 1) return padding.left;
+        return padding.left + (chartWidth / (chartData.length - 1)) * index;
+      }
+      function getRpsY(val) {
+        return padding.top + chartHeight - (val / maxRps) * chartHeight;
+      }
+      function getLatY(val) {
+        return padding.top + chartHeight - (val / maxLatency) * chartHeight;
+      }
+
+      // Plot RPS (Blue Line)
+      ctx.beginPath();
+      ctx.strokeStyle = '#3b82f6';
+      ctx.lineWidth = 2.5;
+      for (let i = 0; i < chartData.length; i++) {
+        const x = getX(i);
+        const y = getRpsY(chartData[i].rps);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Area fill for RPS
+      if (chartData.length > 1) {
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+        ctx.moveTo(getX(0), padding.top + chartHeight);
+        for (let i = 0; i < chartData.length; i++) {
+          ctx.lineTo(getX(i), getRpsY(chartData[i].rps));
+        }
+        ctx.lineTo(getX(chartData.length - 1), padding.top + chartHeight);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Plot Latency (Emerald Green Line)
+      ctx.beginPath();
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2.5;
+      for (let i = 0; i < chartData.length; i++) {
+        const x = getX(i);
+        const y = getLatY(chartData[i].latency);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Area fill for Latency
+      if (chartData.length > 1) {
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.05)';
+        ctx.moveTo(getX(0), padding.top + chartHeight);
+        for (let i = 0; i < chartData.length; i++) {
+          ctx.lineTo(getX(i), getLatY(chartData[i].latency));
+        }
+        ctx.lineTo(getX(chartData.length - 1), padding.top + chartHeight);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+
+    // STATE variables for testing engine
+    let isRunning = false;
+    let metrics = {
+      sent: 0,
+      success: 0,
+      failed: 0,
+      latencies: [],
+      latenciesSum: 0,
+      latenciesMin: Infinity,
+      latenciesMax: 0,
+      secondRequests: 0,
+      secondLatencies: [],
+      startMs: 0
+    };
+    let activeWorkers = 0;
+    let timerId = null;
+    let secondIntervalId = null;
+    let progressTimerId = null;
+    let abortController = null;
+
+    // Async Fetch Worker Function
+    async function startFetchWorker(url, key, controller) {
+      activeWorkers++;
+      while (isRunning && !controller.signal.aborted) {
+        const start = performance.now();
+        metrics.sent++;
+        metrics.secondRequests++;
+        
+        try {
+          const res = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'apikey': key,
+              'Authorization': `Bearer ${key}`
+            },
+            signal: controller.signal
+          });
+          
+          const end = performance.now();
+          const latency = end - start;
+
+          if (res.ok) {
+            metrics.success++;
+            metrics.latenciesSum += latency;
+            metrics.secondLatencies.push(latency);
+            if (latency < metrics.latenciesMin) metrics.latenciesMin = latency;
+            if (latency > metrics.latenciesMax) metrics.latenciesMax = latency;
+            metrics.latencies.push(latency);
+          } else {
+            metrics.failed++;
+            logMessage(`Request failed with status ${res.status}: ${res.statusText}`, 'error');
+          }
+        } catch (err) {
+          if (err.name === 'AbortError') {
+            break;
+          }
+          metrics.failed++;
+          metrics.secondLatencies.push(performance.now() - start);
+          logMessage(`Request error: ${err.message}`, 'error');
+        }
+
+        // yield control to UI/other promises slightly to avoid thread starvation
+        await new Promise(resolve => setTimeout(resolve, 1));
+      }
+      activeWorkers--;
+    }
+
+    // Global variable to hold report details
+    let testReport = null;
+
+    function generateReportData(url, key, numUsers, durationElapsed) {
+      const totalSuccessful = metrics.success;
+      const totalSent = metrics.sent;
+      const successRate = totalSent > 0 ? (totalSuccessful / totalSent) * 100 : 0;
+      let avgLatency = totalSuccessful > 0 ? metrics.latenciesSum / totalSuccessful : 0;
+      const minLat = metrics.latenciesMin === Infinity ? 0 : metrics.latenciesMin;
+      const maxLat = metrics.latenciesMax;
+      const avgRpsVal = durationElapsed > 0 ? totalSent / durationElapsed : 0;
+
+      // Calculate Percentiles
+      const sortedLatencies = [...metrics.latencies].sort((a, b) => a - b);
+      const getPercentile = (p) => {
+        if (sortedLatencies.length === 0) return 0;
+        const index = Math.ceil((p / 100) * sortedLatencies.length) - 1;
+        return sortedLatencies[Math.max(0, index)];
+      };
+
+      testReport = {
+        timestamp: new Date().toISOString(),
+        configuration: {
+          targetUrl: url,
+          virtualUsers: numUsers,
+          configuredDurationSeconds: parseInt(inputDuration.value)
+        },
+        results: {
+          totalRequestsSent: totalSent,
+          successfulRequests: totalSuccessful,
+          failedRequests: metrics.failed,
+          successRatePercent: parseFloat(successRate.toFixed(2)),
+          averageRps: Math.round(avgRpsVal),
+          latencyMs: {
+            min: Math.round(minLat),
+            avg: Math.round(avgLatency),
+            max: Math.round(maxLat),
+            p50: Math.round(getPercentile(50)),
+            p90: Math.round(getPercentile(90)),
+            p99: Math.round(getPercentile(99))
+          }
+        },
+        timeSeries: chartData
+      };
+      
+      return testReport;
+    }
+
+    // Run Load Test Orchestrator
+    async function runLoadTest(url, key, numUsers, durationSeconds) {
+      logMessage(`Preparing load test: targetting ${url} with ${numUsers} concurrent virtual users for ${durationSeconds} seconds.`, 'info');
+      
+      // Reset State
+      isRunning = true;
+      testReport = null;
+      document.getElementById('btn-copy').disabled = true;
+      document.getElementById('btn-export').disabled = true;
+
+      metrics = {
+        sent: 0,
+        success: 0,
+        failed: 0,
+        latencies: [],
+        latenciesSum: 0,
+        latenciesMin: Infinity,
+        latenciesMax: 0,
+        secondRequests: 0,
+        secondLatencies: [],
+        startMs: performance.now()
+      };
+      chartData = [];
+      abortController = new AbortController();
+
+      // UI States
+      statusDot.className = 'dot running';
+      statusText.textContent = 'Running Load Test...';
+      btnStart.disabled = true;
+      btnAbort.disabled = false;
+      inputUrl.disabled = true;
+      inputKey.disabled = true;
+      selectPath.disabled = true;
+      inputUsers.disabled = true;
+      inputDuration.disabled = true;
+
+      // Start the parallel fetch loops
+      for (let i = 0; i < numUsers; i++) {
+        startFetchWorker(url, key, abortController);
+      }
+
+      // Interval to update statistics and chart every 1 second
+      let elapsedSeconds = 0;
+      remainingTimeEl.textContent = `${durationSeconds}s remaining`;
+      
+      secondIntervalId = setInterval(() => {
+        elapsedSeconds++;
+        const remaining = Math.max(0, durationSeconds - elapsedSeconds);
+        remainingTimeEl.textContent = `${remaining}s remaining`;
+        progressBarFill.style.width = `${(elapsedSeconds / durationSeconds) * 100}%`;
+
+        // Calculate average latency for this specific second
+        let avgSecLatency = 0;
+        if (metrics.secondLatencies.length > 0) {
+          const sum = metrics.secondLatencies.reduce((a, b) => a + b, 0);
+          avgSecLatency = sum / metrics.secondLatencies.length;
+        }
+
+        // Push data to chart
+        chartData.push({
+          rps: metrics.secondRequests,
+          latency: Math.round(avgSecLatency),
+          timestamp: elapsedSeconds
+        });
+
+        // Update current statistics
+        updateDashboardUI(false, elapsedSeconds);
+
+        // Reset per-second buffers
+        metrics.secondRequests = 0;
+        metrics.secondLatencies = [];
+
+        if (elapsedSeconds >= durationSeconds) {
+          stopLoadTest(true);
+        }
+      }, 1000);
+    }
+
+    function stopLoadTest(completedNormally = true) {
+      if (!isRunning) return;
+      isRunning = false;
+
+      // Clear intervals
+      clearInterval(secondIntervalId);
+      
+      if (abortController) {
+        abortController.abort();
+      }
+
+      // UI updates
+      btnStart.disabled = false;
+      btnAbort.disabled = true;
+      inputUrl.disabled = false;
+      inputKey.disabled = false;
+      selectPath.disabled = false;
+      inputUsers.disabled = false;
+      inputDuration.disabled = false;
+
+      const durationElapsed = (performance.now() - metrics.startMs) / 1000;
+
+      if (completedNormally) {
+        statusDot.className = 'dot completed';
+        statusText.textContent = 'Test Completed Successfully';
+        progressBarFill.style.width = '100%';
+        remainingTimeEl.textContent = 'Finished';
+        logMessage('Load test completed. Checking final statistics...', 'info');
+
+        const baseUrl = inputUrl.value.trim();
+        const path = selectPath.value;
+        const fullUrl = `${baseUrl.replace(/\/$/, '')}${path}`;
+        const key = inputKey.value.trim();
+        const numUsers = parseInt(inputUsers.value);
+
+        generateReportData(fullUrl, key, numUsers, durationElapsed);
+        document.getElementById('btn-copy').disabled = false;
+        document.getElementById('btn-export').disabled = false;
+      } else {
+        statusDot.className = 'dot failed';
+        statusText.textContent = 'Test Aborted';
+        logMessage('Load test aborted by user.', 'warn');
+      }
+
+      updateDashboardUI(true, durationElapsed);
+    }
+
+    function updateDashboardUI(final = false, elapsed = 0) {
+      // Calculate overall latency stats
+      const totalSuccessful = metrics.success;
+      const totalSent = metrics.sent;
+      const successRate = totalSent > 0 ? (totalSuccessful / totalSent) * 100 : 0;
+
+      elSent.textContent = totalSent.toLocaleString();
+      elRate.textContent = `${successRate.toFixed(1)}%`;
+      elSuccessRatio.textContent = `${totalSuccessful.toLocaleString()} / ${totalSent.toLocaleString()} successful`;
+
+      let avgLatency = 0;
+      if (totalSuccessful > 0) {
+        avgLatency = metrics.latenciesSum / totalSuccessful;
+      }
+      elLatencyAvg.textContent = `${Math.round(avgLatency)} ms`;
+
+      const minLat = metrics.latenciesMin === Infinity ? 0 : Math.round(metrics.latenciesMin);
+      const maxLat = Math.round(metrics.latenciesMax);
+      elLatencyMinMax.textContent = `Min: ${minLat}ms | Max: ${maxLat}ms`;
+
+      // Calculate RPS (Requests per second)
+      let currentRps = 0;
+      if (chartData.length > 0) {
+        currentRps = chartData[chartData.length - 1].rps;
+      }
+      elRps.textContent = currentRps;
+
+      // Avg RPS across the whole test
+      const durationElapsed = final ? elapsed : elapsed;
+      const avgRpsVal = durationElapsed > 0 ? totalSent / durationElapsed : 0;
+      elRpsAvg.textContent = `Avg: ${Math.round(avgRpsVal)} req/sec`;
+
+      // Redraw chart
+      drawChart();
+
+      if (final && testReport) {
+        const r = testReport.results;
+        logMessage(`SUMMARY:`, 'info');
+        logMessage(`- Total Requests Sent: ${r.totalRequestsSent}`, 'info');
+        logMessage(`- Successful Requests: ${r.successfulRequests} (${r.successRatePercent}% success rate)`, 'info');
+        logMessage(`- Avg Response Time: ${r.latencyMs.avg}ms`, 'info');
+        logMessage(`- Response Time Range: ${r.latencyMs.min}ms to ${r.latencyMs.max}ms`, 'info');
+        logMessage(`- Percentiles: p50: ${r.latencyMs.p50}ms | p90: ${r.latencyMs.p90}ms | p99: ${r.latencyMs.p99}ms`, 'info');
+        logMessage(`- Average RPS: ${r.averageRps} req/sec`, 'info');
+      }
+    }
+
+    // Form submission
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const baseUrl = inputUrl.value.trim();
+      const path = selectPath.value;
+      const fullUrl = `${baseUrl.replace(/\/$/, '')}${path}`;
+      
+      const key = inputKey.value.trim();
+      const numUsers = parseInt(inputUsers.value);
+      const duration = parseInt(inputDuration.value);
+
+      if (!baseUrl || !key) {
+        alert('Please specify both Supabase URL and Anon Key.');
+        return;
+      }
+
+      runLoadTest(fullUrl, key, numUsers, duration);
+    });
+
+    // Abort button
+    btnAbort.addEventListener('click', () => {
+      stopLoadTest(false);
+    });
+
+    // Copy report to clipboard
+    document.getElementById('btn-copy').addEventListener('click', () => {
+      if (!testReport) return;
+      
+      const r = testReport.results;
+      const c = testReport.configuration;
+      const text = `================================================
+DRIVESMART LOAD TESTING REPORT
+Timestamp: ${testReport.timestamp}
+================================================
+Target URL:   ${c.targetUrl}
+Concurrency:  ${c.virtualUsers} virtual users
+================================================
+METRICS:
+- Total Requests Sent: ${r.totalRequestsSent}
+- Successful Requests: ${r.successfulRequests}
+- Failed Requests:     ${r.failedRequests}
+- Success Rate:        ${r.successRatePercent}%
+- Average RPS:         ${r.averageRps} req/sec
+
+LATENCY (Response Time):
+- Min:                 ${r.latencyMs.min} ms
+- Average:             ${r.latencyMs.avg} ms
+- Max:                 ${r.latencyMs.max} ms
+- p50 (Median):        ${r.latencyMs.p50} ms
+- p90:                 ${r.latencyMs.p90} ms
+- p99:                 ${r.latencyMs.p99} ms
+================================================`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Report copied to clipboard!');
+      }).catch(err => {
+        alert('Could not copy report: ' + err);
+      });
+    });
+
+    // Download JSON Report
+    document.getElementById('btn-export').addEventListener('click', () => {
+      if (!testReport) return;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(testReport, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href",     dataStr);
+      downloadAnchor.setAttribute("download", `drivesmart_loadtest_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    });
+  </script>
+</body>
+</html>
